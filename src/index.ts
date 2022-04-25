@@ -64,7 +64,20 @@ export const webpack = (
       rules: [
         ...(webpackConfig.module?.rules ?? []),
         {
-          test: /\.css$/,
+          test: /\.(p)?css$/,
+          sideEffects: true,
+          ...rule,
+          use: [
+            ...wrapLoader(require.resolve('style-loader'), styleLoaderOptions),
+            ...wrapLoader(require.resolve('css-loader'), cssLoaderOptions),
+            ...wrapLoader(
+              require.resolve('postcss-loader'),
+              postcssLoaderOptions,
+            ),
+          ],
+        },
+        {
+          test: /\.postcss$/,
           sideEffects: true,
           ...rule,
           use: [
